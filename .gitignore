@@ -1,2 +1,4 @@
 config.py
 days_since.json
+venv/
+__pycache__/
