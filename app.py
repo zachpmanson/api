@@ -17,8 +17,6 @@ try:
     with open("./days_since.json", "r") as f:
         days_since = json.loads(f.read())
 except OSError:
-    with open("./days_since.json", "w") as f:
-        f.write("")
     days_since = {}
 
 
