@@ -31,7 +31,10 @@ def root():
 def get_days_since():
     res = {}
     for key,value in days_since.items():
-        res[key] = f"{(date.today() - date.fromisoformat(value)).days} days since last broken {key} deployment"
+        if value == "never":
+            res[key] = f"{key} has never had a broken deployment"
+        else:
+            res[key] = f"{(date.today() - date.fromisoformat(value)).days} days since last broken {key} deployment"
     return jsonify(res), 200
 
 @app.post("/days-since")
@@ -53,6 +56,8 @@ def set_days_since():
         for key,value in req_body["update"].items():
             if value == "":
                 del days_since[key]
+            elif value == "never":
+                days_since[key] = value
             else:
                 days_since[key] = str(date.fromisoformat(value))
 
