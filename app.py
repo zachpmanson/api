@@ -30,7 +30,7 @@ def root():
 @app.get("/days-since")
 def get_days_since():
     res = {key:f"{(date.today() - date.fromisoformat(value)).days} days since last broken {key} deployment" for key,value in days_since.items()}
-    return jsonify(res)
+    return res, 200
 
 @app.post("/days-since")
 @limiter.limit("10/minute")
