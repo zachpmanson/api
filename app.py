@@ -48,7 +48,7 @@ def set_days_since():
         req_body = request.get_json()
         
         if (req_body["key"] != app.config["DAYS_SINCE_KEY"]):
-            return jsonify({"error", "Password incorrect"}), 401
+            return jsonify({"error": "Password incorrect"}), 401
 
         for key,value in req_body["update"].items():
             days_since[key] = str(date.fromisoformat(value))
