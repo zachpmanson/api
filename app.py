@@ -56,14 +56,14 @@ def set_days_since():
 
                 return json.dumps({'success':True}), 201, {'ContentType':'application/json'} 
             else:
-                return {"error", "Password incorrect"}, 401
+                return json.dumps({"error", "Password incorrect"}), 401
 
     except ValueError:
-        return {"error": "Value error"}, 400
+        return json.dumps({"error": "Value error"}), 400
     except Exception as e:
         print(e)
-        return {"error": "Malformed"}, 400
-    return {"error": "Request must be JSON"}, 415
+        return json.dumps({"error": "Malformed"}), 400
+    return json.dumps({"error": "Request must be JSON"}), 415
 
 if __name__ == "__main__":
     app.run()
