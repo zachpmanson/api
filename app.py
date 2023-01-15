@@ -2,6 +2,8 @@
 from flask import Flask, request, jsonify
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from flask_cors import CORS
+
 import json
 from datetime import date
 
@@ -13,12 +15,17 @@ limiter = Limiter(
     storage_uri="memory://"
 )
 
+CORS(app)
+
 try:
     with open("./days_since.json", "r") as f:
         days_since = json.loads(f.read())
 except OSError:
     days_since = {}
 
+@app.route("/")
+def root():
+  return "API server active!"
 
 @app.get("/days-since")
 def get_days_since():
@@ -48,6 +55,8 @@ def set_days_since():
                     f.write(json.dumps(days_since))
 
                 return json.dumps({'success':True}), 201, {'ContentType':'application/json'} 
+            else:
+                return {"error", "Password incorrect"}, 401
 
     except ValueError:
         return {"error": "Value error"}, 400
