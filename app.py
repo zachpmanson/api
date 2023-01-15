@@ -51,7 +51,7 @@ def set_days_since():
             return jsonify({"error", "Password incorrect"}), 401
 
         for key,value in req_body["update"].items():
-            days_since[key] = date.fromisoformat(value)
+            days_since[key] = str(date.fromisoformat(value))
 
         with open("./days_since.json", "w") as f:
             f.write(json.dumps(days_since))
