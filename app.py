@@ -63,7 +63,7 @@ def set_days_since():
         return jsonify({"error": "Value error"}), 400
     except Exception as e:
         print(e)
-        return jsonify({"error": "Malformed"}), 400
+        return jsonify({"error": "Malformed"+str(e)}), 400
     return jsonify({"error": "Unknown error"}), 400
 
 if __name__ == "__main__":
