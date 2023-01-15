@@ -40,30 +40,28 @@ def set_days_since():
     {"key":"password", "update": {"variantname":"2023-01-13"}}
     """
     try:
-        if request.is_json:
-            req_json = request.get_json()
-            DAYS_SINCE_KEY = req_json["key"]
-            if (DAYS_SINCE_KEY == app.config["DAYS_SINCE_KEY"]):
-                print(req_json)
-                update_obj = req_json["update"]
-                for key,value in update_obj.items():
-                    as_date = date.fromisoformat(value)
-                        
-                    days_since[key] = value
-                print(days_since)
-                with open("./days_since.json", "w") as f:
-                    f.write(json.dumps(days_since))
+        if not request.is_json:
+            return {"error": "Request must be JSON"}, 415
+        
+        req_body = request.get_json()
+        
+        if (req_body["key"] != app.config["DAYS_SINCE_KEY"]):
+            return {"error", "Password incorrect"}, 401
 
-                return json.dumps({'success':True}), 201, {'ContentType':'application/json'} 
-            else:
-                return json.dumps({"error", "Password incorrect"}), 401
+        for key,value in req_body["update"].items():
+            days_since[key] = date.fromisoformat(value)
+
+        with open("./days_since.json", "w") as f:
+            f.write(json.dumps(days_since))
+
+        return {'success':True}, 201
+
 
     except ValueError:
-        return json.dumps({"error": "Value error"}), 400
+        return {"error": "Value error"}, 400
     except Exception as e:
         print(e)
-        return json.dumps({"error": "Malformed"}), 400
-    return json.dumps({"error": "Request must be JSON"}), 415
+        return {"error": "Malformed"}, 400
 
 if __name__ == "__main__":
     app.run()
