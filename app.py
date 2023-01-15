@@ -20,7 +20,7 @@ CORS(app)
 try:
     with open("./days_since.json", "r") as f:
         days_since = json.loads(f.read())
-except OSError:
+except:
     days_since = {}
 
 @app.route("/")
