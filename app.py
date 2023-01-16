@@ -25,7 +25,14 @@ except:
 
 @app.route("/")
 def root():
-  return "API server active!"
+    import urllib
+    links = "<code><ul>"
+    routes = ['%s' % rule for rule in app.url_map.iter_rules()]
+    for route in app.url_map.iter_rules():
+        links += f"<li><a href='{route}'>{route}</a>"
+        links += f"<p style='margin-left:1rem'>{route.methods} {route.arguments}</p></li>"
+    links+="</code>"
+    return "API server active!" + links
 
 @app.get("/days-since")
 def get_days_since():
