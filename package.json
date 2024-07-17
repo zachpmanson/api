@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generate": "prisma generate",
+    "migrate": "prisma migrate deploy",
+    "preinstall": "npx only-allow pnpm",
+    "postinstall": "npm run generate"
   },
   "dependencies": {
     "@prisma/client": "5.17.0",
