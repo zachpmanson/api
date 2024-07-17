@@ -1,0 +1,15 @@
+meta {
+  name: prod-broke
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://localhost:3000/api/prod-broke?pretty=true
+  body: none
+  auth: none
+}
+
+params:query {
+  pretty: true
+}

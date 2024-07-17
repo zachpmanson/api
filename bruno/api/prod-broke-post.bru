@@ -1,0 +1,23 @@
+meta {
+  name: prod-broke-post
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:3000/api/prod-broke
+  body: json
+  auth: none
+}
+
+headers {
+  ~Content-Type: text/json
+}
+
+body:json {
+  {
+    "date": "2024-06-01",
+    "deployment": "STG",
+    "key": "example-password"
+  }
+}
