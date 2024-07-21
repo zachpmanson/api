@@ -1,9 +1,8 @@
-import { Prisma } from "@prisma/client";
-import { NextResponse, type NextRequest } from "next/server";
+import { type NextRequest } from "next/server";
+import { z } from "zod";
 import prisma from "../../../server/prisma";
-import { date, z } from "zod";
 
-export async function GET(request: NextRequest, context: { params: Params }) {
+export async function GET(request: NextRequest) {
   const deployments = await prisma.brokenDeployment.groupBy({
     by: ["deployment"],
     _max: {
@@ -22,24 +21,6 @@ export async function GET(request: NextRequest, context: { params: Params }) {
     })
   );
 
-  if (request.nextUrl.searchParams.get("pretty") === "true") {
-    let res: Record<string, any> = {};
-    for (let d of DEPLOYMENT_ENVIRONMENTS) {
-      const brokenDeployment = latestBrokenDeployments.find(
-        (brokenDeployment) =>
-          !!brokenDeployment && brokenDeployment.deployment === d
-      );
-      if (brokenDeployment) {
-        const diff = Date.now() - new Date(brokenDeployment.date).getTime();
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        res[d] = `${days.toString()} days since last broken ${d} deployment`;
-      } else {
-        res[d] = `${d} has never had a broken deployment`;
-      }
-    }
-    return Response.json(res);
-  }
-
   return Response.json(latestBrokenDeployments);
 }
 
@@ -49,8 +30,6 @@ const schema = z.object({
   date: z.string().pipe(z.coerce.date()),
   key: z.string(),
 });
-
-type Params = z.infer<typeof schema>;
 
 export async function POST(req: NextRequest) {
   const response = schema.safeParse(await req.json());
