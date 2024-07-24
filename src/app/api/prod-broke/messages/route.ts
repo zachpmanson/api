@@ -38,10 +38,3 @@ export async function GET() {
   }
   return Response.json(res);
 }
-
-const DEPLOYMENT_ENVIRONMENTS: readonly ["PROD", "STG"] = ["PROD", "STG"];
-const schema = z.object({
-  deployment: z.enum(DEPLOYMENT_ENVIRONMENTS),
-  date: z.string().pipe(z.coerce.date()),
-  key: z.string(),
-});
