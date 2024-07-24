@@ -1,6 +1,8 @@
 import prisma from "@/server/prisma";
 import { z } from "zod";
 
+export const revalidate = 0;
+
 export async function GET() {
   const deployments = await prisma.brokenDeployment.groupBy({
     by: ["deployment"],
