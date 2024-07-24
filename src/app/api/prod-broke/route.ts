@@ -1,6 +1,7 @@
 import { type NextRequest } from "next/server";
 import { z } from "zod";
 import prisma from "../../../server/prisma";
+import { DEPLOYMENT_ENVIRONMENTS } from "@/types/prod-broke";
 
 export const revalidate = 0;
 export async function GET(request: NextRequest) {
@@ -25,7 +26,6 @@ export async function GET(request: NextRequest) {
   return Response.json(latestBrokenDeployments);
 }
 
-const DEPLOYMENT_ENVIRONMENTS: readonly ["PROD", "STG"] = ["PROD", "STG"];
 const schema = z.object({
   deployment: z.enum(DEPLOYMENT_ENVIRONMENTS),
   date: z.string().pipe(z.coerce.date()),
