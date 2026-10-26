@@ -1,5 +1,5 @@
 {
-  description = "api";
+  description = "Small Go/SQLite deployment tracker";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
@@ -11,17 +11,16 @@
       let pkgs = nixpkgs.legacyPackages.${system};
       in {
         packages.default = pkgs.callPackage ./nix/package.nix {};
-
+        checks = {
+          package = self.packages.${system}.default;
+        } // pkgs.lib.optionalAttrs pkgs.stdenv.isLinux {
+          module = import ./nix/module-check.nix { inherit pkgs nixpkgs self; };
+        };
         devShells.default = pkgs.mkShell {
-          packages = [ pkgs.nodejs_22 pkgs.pnpm pkgs.prisma-engines ];
-
-          # Point pnpm/prisma at the nix-provided engine binaries (matches
-          # nix/package.nix) so `pnpm prisma generate` works in the shell.
-          PRISMA_QUERY_ENGINE_LIBRARY = "${pkgs.prisma-engines}/lib/libquery_engine.node";
-          PRISMA_SCHEMA_ENGINE_BINARY = "${pkgs.prisma-engines}/bin/schema-engine";
-          PRISMA_FMT_BINARY = "${pkgs.prisma-engines}/bin/prisma-fmt";
+          packages = [ pkgs.go pkgs.gcc pkgs.sqlite pkgs.pkg-config ];
+          CGO_ENABLED = "1";
         };
       }) // {
-      nixosModules.default = import ./nix/module.nix self;
-    };
+        nixosModules.default = import ./nix/module.nix self;
+      };
 }
